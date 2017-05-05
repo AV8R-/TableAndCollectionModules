@@ -6,7 +6,7 @@
 //
 //
 
-import Foundation
+import UIKit
 
 class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     let modulled: Modulled<TableModuleObject>

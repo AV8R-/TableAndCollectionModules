@@ -6,7 +6,7 @@
 //
 //
 
-import Foundation
+import UIKit
 
 protocol ModuleObject {
     associatedtype CollectionType
