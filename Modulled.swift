@@ -13,6 +13,7 @@ protocol ModuleObject {
     associatedtype ReusableViewType
     
     var reusable: ReusableViewType { set get }
+    var preparations: (CollectionType) -> Void { get }
     var collection: CollectionType? { set get }
     func numberOfSection(in collection: CollectionType) -> Int
     func collection(_ collection: CollectionType, rowsIn section: Int) -> Int
@@ -27,6 +28,7 @@ class CollectionModuleObject: ModuleObject {
     var actualDelegate: CollectionModule
     init(actualDelegate: CollectionModule) {
         self.actualDelegate = actualDelegate
+        preparations = self.actualDelegate.preparations
     }
     
     var reusable: ReusableViewType {
@@ -38,6 +40,8 @@ class CollectionModuleObject: ModuleObject {
         }
     }
     
+    var preparations: (UICollectionView) -> Void = { _ in }
+    
     func numberOfSection(in collection: CollectionType) -> Int {
         return actualDelegate.numberOfSections?(in: collection) ?? 1
     }
@@ -48,6 +52,7 @@ class CollectionModuleObject: ModuleObject {
 
 protocol CollectionModule: NSObjectProtocol, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     var reusable: CollectionReusable { set get }
+    var preparations: (UICollectionView) -> Void { get }
 }
 
 class TableModuleObject: ModuleObject {
@@ -63,10 +68,14 @@ class TableModuleObject: ModuleObject {
             return actualDelegate.reusable
         }
     }
+    
+    var preparations: (UITableView) -> Void = { _ in }
+    
     var actualDelegate: TableModule
     
     init(actualDelegate: TableModule) {
         self.actualDelegate = actualDelegate
+        preparations = self.actualDelegate.preparations
     }
     
     internal func numberOfSection(in collection: UITableView) -> Int {
@@ -81,6 +90,7 @@ class TableModuleObject: ModuleObject {
 
 protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {
     var reusable: TableReusable { set get }
+    var preparations: (UITableView) -> Void { get }
 }
 
 class Modulled<ModuleType: ModuleObject>: NSObject where ModuleType.ReusableViewType: Reusable, ModuleType.ReusableViewType.CollectionType == ModuleType.CollectionType {
@@ -103,6 +113,7 @@ class Modulled<ModuleType: ModuleObject>: NSObject where ModuleType.ReusableView
         for (index, var module) in modules.enumerated() {
             module.collection = collection
             module.reusable.register(for: collection)
+            module.preparations(collection)
             let sections = module.numberOfSection(in: collection)
             for section in 0..<sections {
                 let rows = module.collection(collection, rowsIn: section)
