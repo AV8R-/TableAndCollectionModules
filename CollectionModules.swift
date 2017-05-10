@@ -33,11 +33,8 @@ class CollectionModuleObject: ModuleObject {
     
     var preparations: (UICollectionView) -> Void = { _ in }
     
-    func numberOfSection(in collection: CollectionType) -> Int {
-        return actualDelegate.numberOfSections?(in: collection) ?? 1
-    }
-    func collection(_ collection: CollectionType, rowsIn section: Int) -> Int {
-        return actualDelegate.collectionView(collection, numberOfItemsInSection: section)
+    func rowsCount() -> Int {
+        return actualDelegate.collectionView(collection!, numberOfItemsInSection: 0)
     }
     
     func reload() {

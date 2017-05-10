@@ -16,7 +16,24 @@ protocol ModuleObject {
     var preparations: (CollectionType) -> Void { get }
     var collection: CollectionType? { set get }
     var section: Int { set get }
-    func numberOfSection(in collection: CollectionType) -> Int
-    func collection(_ collection: CollectionType, rowsIn section: Int) -> Int
+    func rowsCount() -> Int
     func reload()
+}
+
+protocol ComplexModule: ModuleObject {
+    associatedtype Submodule: ModuleObject
+    
+    var submodules: [Submodule] { set get }
+}
+
+extension ComplexModule where Submodule.CollectionType == CollectionType, Submodule.ReusableViewType == ReusableViewType {
+    var preparations: (CollectionType) -> Void {
+        return { collection in
+            self.submodules.forEach { $0.preparations(collection) }
+        }
+    }
+    
+    func reload() {
+        submodules.forEach { $0.reload() }
+    }
 }

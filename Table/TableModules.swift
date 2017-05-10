@@ -33,14 +33,10 @@ class TableModuleObject: ModuleObject {
         preparations = self.actualDelegate.preparations
     }
     
-    internal func numberOfSection(in collection: UITableView) -> Int {
-        return actualDelegate.numberOfSections?(in: collection) ?? 1
+    func rowsCount() -> Int {
+        return actualDelegate.tableView(collection!, numberOfRowsInSection: 0)
     }
-    
-    internal func collection(_ collection: UITableView, rowsIn section: Int) -> Int {
-        return actualDelegate.tableView(collection, numberOfRowsInSection: section)
-    }
-    
+        
     func reload() {
         collection?.reloadSections(IndexSet(integer: section), with: .none)
     }
@@ -50,10 +46,4 @@ protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSour
     var reusable: TableReusable { set get }
     var preparations: (UITableView) -> Void { get }
     var reload: () -> Void { set get }
-}
-
-extension TableModule {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
 }
