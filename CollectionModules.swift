@@ -14,11 +14,13 @@ class CollectionModuleObject: ModuleObject {
     
     typealias CollectionType = UICollectionView
     typealias ReusableViewType = CollectionReusable
+    typealias ActualModule = CollectionModule
     
     var actualDelegate: CollectionModule
-    init(actualDelegate: CollectionModule, section: Int) {
-        self.actualDelegate = actualDelegate
+    required init(module: CollectionModule, section: Int) {
+        self.actualDelegate = module
         self.section = section
+        self.actualDelegate.reload = reload
         preparations = self.actualDelegate.preparations
     }
     
@@ -39,6 +41,10 @@ class CollectionModuleObject: ModuleObject {
     
     func reload() {
         collection?.reloadSections(IndexSet(integer: section))
+    }
+
+    func didSelect(row: Int) {
+        actualDelegate.collectionView!(collection!, didSelectItemAt: IndexPath(item: row, section: 0))
     }
 }
 

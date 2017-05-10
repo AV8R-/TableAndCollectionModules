@@ -30,9 +30,7 @@ class ModulledCollection: NSObject, UICollectionViewDelegate, UICollectionViewDa
     }
     
     func append(module: CollectionModule) {
-        let moduleObject = CollectionModuleObject(actualDelegate: module, section: modulled.modules.count)
-        module.reload = moduleObject.reload
-        modulled.modules.append(moduleObject)
+        modulled.modules.append(CollectionModuleObject(module: module, section: modulled.modules.count))
     }
     
     //MARK: Delegate

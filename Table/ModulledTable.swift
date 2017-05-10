@@ -23,17 +23,15 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func append(module: TableModule) {
-        let moduleObject = TableModuleObject(actualDelegate: module, section: modulled.modules.count)
-        module.reload = moduleObject.reload
-        modulled.modules.append(moduleObject)
+        if let module = module as? ComplexTableModule {
+            modulled.modules.append(ComplexTableModuleObject(module: module, section: modulled.modules.count))
+        } else {
+            modulled.modules.append(TableModuleObject(module: module, section: modulled.modules.count))
+        }
     }
     
     func preapre() {
         modulled.prepare()
-    }
-    
-    func numberOfRows(inSection section: Int) -> Int {
-        return modulled.module(at: section).actualDelegate.tableView(collection, numberOfRowsInSection: section)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -41,22 +39,22 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfRows(inSection: section)
+        return modulled.module(at: section).rowsCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let module = modulled.module(at: indexPath.section)
-        return module.actualDelegate.tableView(tableView, cellForRowAt: indexPath)
+        return module.cell(for: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let module = modulled.module(at: indexPath.section)
-        return module.actualDelegate.tableView?(tableView, heightForRowAt: indexPath) ?? 0
+        return module.height(for: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let module = modulled.module(at: indexPath.section)
-        module.actualDelegate.tableView?(tableView, didSelectRowAt: indexPath)
+        module.didSelect(row: indexPath.row)
     }
     
 }

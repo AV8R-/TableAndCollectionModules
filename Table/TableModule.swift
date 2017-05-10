@@ -11,6 +11,7 @@ import UIKit
 class TableModuleObject: ModuleObject {
     typealias CollectionType = UITableView
     typealias ReusableViewType = TableReusable
+    typealias ActualModule = TableModule
     
     internal var collection: UITableView?
     var section: Int
@@ -27,18 +28,31 @@ class TableModuleObject: ModuleObject {
     
     var actualDelegate: TableModule
     
-    init(actualDelegate: TableModule, section: Int) {
-        self.actualDelegate = actualDelegate
+    required init(module: TableModule, section: Int) {
+        self.actualDelegate = module
         self.section = section
+        self.actualDelegate.reload = reload
         preparations = self.actualDelegate.preparations
     }
     
     func rowsCount() -> Int {
         return actualDelegate.tableView(collection!, numberOfRowsInSection: 0)
     }
-        
+    
     func reload() {
         collection?.reloadSections(IndexSet(integer: section), with: .none)
+    }
+    
+    func cell(for row: Int) -> UITableViewCell {
+        return actualDelegate.tableView(collection!, cellForRowAt: IndexPath(row: row, section: 0))
+    }
+    
+    func height(for row: Int) -> CGFloat {
+        return actualDelegate.tableView?(collection!, heightForRowAt: IndexPath(row: row, section: 0)) ?? 0
+    }
+    
+    func didSelect(row: Int) {
+        actualDelegate.tableView?(collection!, didSelectRowAt: IndexPath(row: row, section: 0))
     }
 }
 
