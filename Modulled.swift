@@ -15,19 +15,23 @@ protocol ModuleObject {
     var reusable: ReusableViewType { set get }
     var preparations: (CollectionType) -> Void { get }
     var collection: CollectionType? { set get }
+    var section: Int { set get }
     func numberOfSection(in collection: CollectionType) -> Int
     func collection(_ collection: CollectionType, rowsIn section: Int) -> Int
+    func reload()
 }
 
 class CollectionModuleObject: ModuleObject {
     internal var collection: UICollectionView?
+    var section: Int
 
     typealias CollectionType = UICollectionView
     typealias ReusableViewType = CollectionReusable
     
     var actualDelegate: CollectionModule
-    init(actualDelegate: CollectionModule) {
+    init(actualDelegate: CollectionModule, section: Int) {
         self.actualDelegate = actualDelegate
+        self.section = section
         preparations = self.actualDelegate.preparations
     }
     
@@ -48,11 +52,16 @@ class CollectionModuleObject: ModuleObject {
     func collection(_ collection: CollectionType, rowsIn section: Int) -> Int {
         return actualDelegate.collectionView(collection, numberOfItemsInSection: section)
     }
+    
+    func reload() {
+        collection?.reloadSections(IndexSet(integer: section))
+    }
 }
 
 protocol CollectionModule: NSObjectProtocol, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     var reusable: CollectionReusable { set get }
     var preparations: (UICollectionView) -> Void { get }
+    var reload: () -> Void { set get }
 }
 
 class TableModuleObject: ModuleObject {
@@ -60,6 +69,7 @@ class TableModuleObject: ModuleObject {
     typealias ReusableViewType = TableReusable
     
     internal var collection: UITableView?
+    var section: Int
     internal var reusable: TableReusable {
         set {
             actualDelegate.reusable = reusable
@@ -73,8 +83,9 @@ class TableModuleObject: ModuleObject {
     
     var actualDelegate: TableModule
     
-    init(actualDelegate: TableModule) {
+    init(actualDelegate: TableModule, section: Int) {
         self.actualDelegate = actualDelegate
+        self.section = section
         preparations = self.actualDelegate.preparations
     }
     
@@ -86,11 +97,15 @@ class TableModuleObject: ModuleObject {
         return actualDelegate.tableView(collection, numberOfRowsInSection: section)
     }
     
+    func reload() {
+        collection?.reloadSections(IndexSet(integer: section), with: .none)
+    }
 }
 
 protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {
     var reusable: TableReusable { set get }
     var preparations: (UITableView) -> Void { get }
+    var reload: () -> Void { set get }
 }
 
 class Modulled<ModuleType: ModuleObject>: NSObject where ModuleType.ReusableViewType: Reusable, ModuleType.ReusableViewType.CollectionType == ModuleType.CollectionType {

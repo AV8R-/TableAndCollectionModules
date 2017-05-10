@@ -23,7 +23,9 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func append(module: TableModule) {
-        modulled.modules.append(TableModuleObject(actualDelegate: module))
+        let moduleObject = TableModuleObject(actualDelegate: module, section: modulled.modules.count)
+        module.reload = moduleObject.reload
+        modulled.modules.append(moduleObject)
     }
     
     func preapre() {
