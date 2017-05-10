@@ -109,6 +109,11 @@ public final class ComplexTableModule: NSObject, TableModule {
         append = { [unowned self] in self.submodules.append($0) }
     }
     
+    convenience init(submodules: [TableModule]) {
+        self.init()
+        self.submodules = submodules
+    }
+    
     // These methods should not get called
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
