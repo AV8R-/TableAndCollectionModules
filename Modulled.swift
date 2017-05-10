@@ -95,34 +95,18 @@ protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSour
 
 class Modulled<ModuleType: ModuleObject>: NSObject where ModuleType.ReusableViewType: Reusable, ModuleType.ReusableViewType.CollectionType == ModuleType.CollectionType {
     var collection: ModuleType.CollectionType
-    var didChangeContentHandler: (() -> Void)?
     var modules: [ModuleType] = []
-    var tableMapping: [Int: Int] = [:]
-    var moduleMapping: [Int: (index:Int, sectionOffset:Int)] = [:]
-    var totalNumberOfSections: Int = 0
 
-    func module(at path: IndexPath) -> (module: ModuleType, modulePath: IndexPath) {
-        let data = moduleMapping[path.section]!
-        let module = modules[data.index]
-        let path = IndexPath(row: path.row, section: path.section - data.sectionOffset)
-        return (module, path)
+    func module(at section: Int) -> ModuleType {
+        return modules[section]
     }
     
     func prepare() {
-        var totalSections = 0
-        for (index, var module) in modules.enumerated() {
+        for var module in modules {
             module.collection = collection
             module.reusable.register(for: collection)
             module.preparations(collection)
-            let sections = module.numberOfSection(in: collection)
-            for section in 0..<sections {
-                let rows = module.collection(collection, rowsIn: section)
-                tableMapping[totalSections + section] = rows
-                moduleMapping[totalSections + section] = (index, section + totalSections)
-            }
-            totalSections += sections
         }
-        totalNumberOfSections = totalSections
     }
     
     init(collection: ModuleType.CollectionType) {

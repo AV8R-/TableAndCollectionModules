@@ -31,11 +31,11 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfRows(inSection section: Int) -> Int {
-        return modulled.tableMapping[section]!
+        return modulled.module(at: section).actualDelegate.tableView(collection, numberOfRowsInSection: section)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return modulled.totalNumberOfSections
+        return modulled.modules.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -43,18 +43,18 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let moduleData = modulled.module(at: indexPath)
-        return moduleData.module.actualDelegate.tableView(tableView, cellForRowAt: moduleData.modulePath)
+        let module = modulled.module(at: indexPath.section)
+        return module.actualDelegate.tableView(tableView, cellForRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let moduleData = modulled.module(at: indexPath)
-        return moduleData.module.actualDelegate.tableView?(tableView, heightForRowAt: moduleData.modulePath) ?? 0
+        let module = modulled.module(at: indexPath.section)
+        return module.actualDelegate.tableView?(tableView, heightForRowAt: indexPath) ?? 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let moduleData = modulled.module(at: indexPath)
-        moduleData.module.actualDelegate.tableView?(tableView, didSelectRowAt: moduleData.modulePath)
+        let module = modulled.module(at: indexPath.section)
+        module.actualDelegate.tableView?(tableView, didSelectRowAt: indexPath)
     }
     
 }

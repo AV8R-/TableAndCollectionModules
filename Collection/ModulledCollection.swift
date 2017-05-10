@@ -35,109 +35,109 @@ class ModulledCollection: NSObject, UICollectionViewDelegate, UICollectionViewDa
     
     //MARK: Delegate
     func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, shouldHighlightItemAt: indexPath) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, shouldHighlightItemAt: indexPath) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didHighlightItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didHighlightItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didHighlightItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didHighlightItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, shouldSelectItemAt: indexPath) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, shouldSelectItemAt: indexPath) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, shouldDeselectItemAt: indexPath) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, shouldDeselectItemAt: indexPath) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didSelectItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didSelectItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didDeselectItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didDeselectItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didEndDisplaying: cell, forItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, shouldDeselectItemAt: indexPath) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, shouldDeselectItemAt: indexPath) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, canPerformAction: action, forItemAt: indexPath, withSender: sender) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, canPerformAction: action, forItemAt: indexPath, withSender: sender) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-        modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, performAction: action, forItemAt: indexPath, withSender: sender)
+        modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, performAction: action, forItemAt: indexPath, withSender: sender)
     }
     
     //MARK: DataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return modulled.totalNumberOfSections
+        return modulled.modules.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return modulled.tableMapping[section]!
+        return modulled.module(at: section).actualDelegate.collectionView(collectionView, numberOfItemsInSection: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView(collectionView, cellForItemAt: indexPath)
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView(collectionView, cellForItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView!(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, canMoveItemAt: indexPath) ?? false
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, canMoveItemAt: indexPath) ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        modulled.module(at: sourceIndexPath).module.actualDelegate.collectionView?(collectionView, moveItemAt: sourceIndexPath, to: destinationIndexPath)
+        modulled.module(at: sourceIndexPath.section).actualDelegate.collectionView?(collectionView, moveItemAt: sourceIndexPath, to: destinationIndexPath)
     }
 }
 
 extension ModulledCollection: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return modulled.module(at: indexPath).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath) ?? .zero
+        return modulled.module(at: indexPath.section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, sizeForItemAt: indexPath) ?? .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return modulled.module(at: IndexPath(item: 0, section: section)).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, insetForSectionAt: section) ?? UIEdgeInsetsMake(0, 0, 0, 0)
+        return modulled.module(at: section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, insetForSectionAt: section) ?? UIEdgeInsetsMake(0, 0, 0, 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return modulled.module(at: IndexPath(item: 0, section: section)).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, minimumLineSpacingForSectionAt: section) ?? 0
+        return modulled.module(at: section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, minimumLineSpacingForSectionAt: section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return modulled.module(at: IndexPath(item: 0, section: section)).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, minimumInteritemSpacingForSectionAt: section) ?? 0
+        return modulled.module(at: section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, minimumInteritemSpacingForSectionAt: section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return modulled.module(at: IndexPath(item: 0, section: section)).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section) ?? .zero
+        return modulled.module(at: section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForHeaderInSection: section) ?? .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return modulled.module(at: IndexPath(item: 0, section: section)).module.actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section) ?? .zero
+        return modulled.module(at: section).actualDelegate.collectionView?(collectionView, layout: collectionViewLayout, referenceSizeForFooterInSection: section) ?? .zero
     }
 }
