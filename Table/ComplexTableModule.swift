@@ -23,6 +23,8 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         super.init(module: module, section: section)
         if let complex = module as? ComplexTableModule {
             complex.append = append
+            submodules = complex.submodules.map { Submodule(module: $0, section: section) }
+            complex.submodules.removeAll()
         }
     }
     
@@ -30,8 +32,10 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         set {}
         get {
             return { collection in
-                self.submodules.forEach { [weak self] in
-                    $0.collection = self?.collection
+                self.submodules.forEach { [unowned self] in
+                    $0.section = self.section
+                    $0.collection = self.collection
+                    $0.actualDelegate.reload = self.reload
                     $0.reusable.register(for: collection)
                     $0.preparations(collection)
                 }
@@ -96,7 +100,14 @@ public final class ComplexTableModule: NSObject, TableModule {
     var reusable: TableReusable = .class(UITableViewCell.self)
     var preparations: (UITableView) -> Void = {_ in}
     var reload: () -> Void = {}
-    var append: (TableModule) -> Void = {_ in}
+    var append: (TableModule) -> Void = { _ in }
+    
+    fileprivate var submodules: [TableModule] = []
+    
+    override init() {
+        super.init()
+        append = { [unowned self] in self.submodules.append($0) }
+    }
     
     // These methods should not get called
     
