@@ -10,6 +10,7 @@ import UIKit
 
 enum ModulesError: Error {
     case unableRetrieveSubmodule
+    case emptyCollection
 }
 
 internal final class ComplexTableModuleObject: TableModuleObject {
@@ -53,8 +54,16 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         }
     }
     
-    func append(submodule: TableModule) {
-        submodules.append(Submodule(module: submodule, section: section))
+    func append(submodule: TableModule) throws {
+        guard let collection = collection else {
+            throw ModulesError.emptyCollection
+        }
+        let submodule = Submodule(module: submodule, section: section)
+        submodule.collection = collection
+        submodule.actualDelegate.reload = reload
+        submodule.reusable.register(for: collection)
+        submodule.preparations(collection)
+        submodules.append(submodule)
     }
     
     override func didSelect(row: Int) {
@@ -100,7 +109,7 @@ public final class ComplexTableModule: NSObject, TableModule {
     var reusable: TableReusable = .class(UITableViewCell.self)
     var preparations: (UITableView) -> Void = {_ in}
     var reload: () -> Void = {}
-    var append: (TableModule) -> Void = { _ in }
+    var append: (TableModule) throws -> Void = { _ in }
     
     fileprivate var submodules: [TableModule] = []
     
