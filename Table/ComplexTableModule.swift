@@ -92,6 +92,16 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         return super.cell(for: row)
     }
     
+    override func willSelect(row: Int) -> IndexPath? {
+        do {
+            return try module(at: row).willSelect(row: row)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return super.willSelect(row: row)
+
+    }
+    
     func module(at row: Int) throws -> Submodule {
         var rows = 0
         for submodule in submodules {

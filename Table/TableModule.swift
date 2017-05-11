@@ -54,6 +54,10 @@ class TableModuleObject: ModuleObject {
     func didSelect(row: Int) {
         actualDelegate.tableView?(collection!, didSelectRowAt: IndexPath(row: row, section: 0))
     }
+    
+    func willSelect(row: Int) -> IndexPath? {
+        return actualDelegate.tableView?(collection!, willSelectRowAt: IndexPath(row: row, section: 0))
+    }
 }
 
 protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {
