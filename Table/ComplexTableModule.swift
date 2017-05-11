@@ -45,7 +45,9 @@ internal final class ComplexTableModuleObject: TableModuleObject {
     }
     
     override func reload() {
+        UIView.setAnimationsEnabled(false)
         collection?.reloadSections(IndexSet(integer: section), with: .none)
+        UIView.setAnimationsEnabled(true)
     }
     
     override func rowsCount() -> Int {
@@ -92,13 +94,13 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         return super.cell(for: row)
     }
     
-    override func willSelect(row: Int) -> IndexPath? {
+    override func willSelect(path: IndexPath) -> IndexPath? {
         do {
-            return try module(at: row).willSelect(row: row)
+            return try module(at: path.row).willSelect(path: path)
         } catch {
             print(error.localizedDescription)
         }
-        return super.willSelect(row: row)
+        return super.willSelect(path: path)
 
     }
     

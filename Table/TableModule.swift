@@ -40,7 +40,9 @@ class TableModuleObject: ModuleObject {
     }
     
     func reload() {
+        UIView.setAnimationsEnabled(false)
         collection?.reloadSections(IndexSet(integer: section), with: .none)
+        UIView.setAnimationsEnabled(true)
     }
     
     func cell(for row: Int) -> UITableViewCell {
@@ -55,8 +57,8 @@ class TableModuleObject: ModuleObject {
         actualDelegate.tableView?(collection!, didSelectRowAt: IndexPath(row: row, section: 0))
     }
     
-    func willSelect(row: Int) -> IndexPath? {
-        return actualDelegate.tableView?(collection!, willSelectRowAt: IndexPath(row: row, section: 0))
+    func willSelect(path: IndexPath) -> IndexPath? {
+        return actualDelegate.tableView?(collection!, willSelectRowAt: path)
     }
 }
 

@@ -59,7 +59,7 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let module = modulled.module(at: indexPath.section)
-        return module.willSelect(row: indexPath.row)
+        return module.willSelect(path: indexPath)
     }
     
 }
