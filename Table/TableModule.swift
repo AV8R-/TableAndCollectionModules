@@ -60,6 +60,10 @@ class TableModuleObject: ModuleObject {
     func willSelect(path: IndexPath) -> IndexPath? {
         return actualDelegate.tableView?(collection!, willSelectRowAt: path)
     }
+    
+    func willDisplay(cell: UITableViewCell, at indexPath: IndexPath) {
+        actualDelegate.tableView?(collection!, willDisplay: cell, forRowAt: indexPath)
+    }
 }
 
 protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {

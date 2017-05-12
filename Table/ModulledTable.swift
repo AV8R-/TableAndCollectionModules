@@ -62,4 +62,9 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
         return module.willSelect(path: indexPath)
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let module = modulled.module(at: indexPath.section)
+        module.willDisplay(cell: cell, at: indexPath)
+    }
+    
 }
