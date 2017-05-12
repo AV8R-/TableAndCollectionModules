@@ -104,6 +104,16 @@ internal final class ComplexTableModuleObject: TableModuleObject {
 
     }
     
+    override func willDisplay(cell: UITableViewCell, at indexPath: IndexPath) {
+        do {
+            return try module(at: indexPath.row).willDisplay(cell: cell, at: indexPath)
+        } catch {
+            print(error.localizedDescription)
+        }
+        return super.willDisplay(cell: cell, at: indexPath)
+
+    }
+    
     func module(at row: Int) throws -> Submodule {
         var rows = 0
         for submodule in submodules {
