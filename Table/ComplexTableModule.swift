@@ -23,7 +23,8 @@ internal final class ComplexTableModuleObject: TableModuleObject {
     required init(module: TableModule, section: Int) {
         super.init(module: module, section: section)
         if let complex = module as? ComplexTableModule {
-            complex.append = append
+            complex.append = { [unowned self] in try self.append(submodule: $0) }
+            complex.count = { [unowned self] in self.submodules.count }
             submodules = complex.submodules.map { Submodule(module: $0, section: section) }
             complex.submodules.removeAll()
         }
@@ -33,12 +34,12 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         set {}
         get {
             return { collection in
-                self.submodules.forEach { [unowned self] in
-                    $0.section = self.section
-                    $0.collection = self.collection
-                    $0.actualDelegate.reload = self.reload
-                    $0.reusable.register(for: collection)
-                    $0.preparations(collection)
+                do {
+                    try self.submodules.forEach { [unowned self] in
+                        try self.setup(submodule: $0)
+                    }
+                } catch {
+                    print("Error setting up submodule object in complex module")
                 }
             }
         }
@@ -57,15 +58,20 @@ internal final class ComplexTableModuleObject: TableModuleObject {
     }
     
     func append(submodule: TableModule) throws {
+        let submodule = Submodule(module: submodule, section: section)
+        try setup(submodule: submodule)
+        submodules.append(submodule)
+    }
+    
+    func setup(submodule: Submodule) throws {
         guard let collection = collection else {
             throw ModulesError.emptyCollection
         }
-        let submodule = Submodule(module: submodule, section: section)
+        
         submodule.collection = collection
         submodule.actualDelegate.reload = reload
         submodule.reusable.register(for: collection)
         submodule.preparations(collection)
-        submodules.append(submodule)
     }
     
     override func didSelect(row: Int) {
@@ -132,12 +138,14 @@ public final class ComplexTableModule: NSObject, TableModule {
     var preparations: (UITableView) -> Void = {_ in}
     var reload: () -> Void = {}
     var append: (TableModule) throws -> Void = { _ in }
+    var count: () -> Int = { 0 }
     
     fileprivate var submodules: [TableModule] = []
     
     override init() {
         super.init()
         append = { [unowned self] in self.submodules.append($0) }
+        count = { [unowned self] in self.submodules.count }
     }
     
     convenience init(submodules: [TableModule]) {
