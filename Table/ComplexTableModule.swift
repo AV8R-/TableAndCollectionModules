@@ -140,6 +140,8 @@ public final class ComplexTableModule: NSObject, TableModule {
     var append: (TableModule) throws -> Void = { _ in }
     var count: () -> Int = { 0 }
     
+    var context: Any?
+    
     fileprivate var submodules: [TableModule] = []
     
     override init() {
