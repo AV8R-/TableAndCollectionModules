@@ -22,7 +22,10 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
         tableView.dataSource = self
     }
     
+    var modules: [TableModule] = []
+    
     func append(module: TableModule) {
+        modules.append(module)
         if let module = module as? ComplexTableModule {
             modulled.modules.append(ComplexTableModuleObject(module: module, section: modulled.modules.count))
         } else {
@@ -65,6 +68,26 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let module = modulled.module(at: indexPath.section)
         module.willDisplay(cell: cell, at: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let module = modulled.module(at: section)
+        return module.actualDelegate.tableView?(tableView, heightForHeaderInSection: section) ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        let module = modulled.module(at: section)
+        return module.actualDelegate.tableView?(tableView, heightForFooterInSection: section) ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let module = modulled.module(at: section)
+        return module.actualDelegate.tableView?(tableView, viewForHeaderInSection: section)
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let module = modulled.module(at: section)
+        return module.actualDelegate.tableView?(tableView, viewForFooterInSection: section)
     }
     
 }

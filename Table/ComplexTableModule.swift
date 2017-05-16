@@ -136,9 +136,12 @@ public final class ComplexTableModule: NSObject, TableModule {
 
     var reusable: TableReusable = .class(UITableViewCell.self)
     var preparations: (UITableView) -> Void = {_ in}
-    var reload: () -> Void = {}
+    public var reload: () -> Void = {}
     var append: (TableModule) throws -> Void = { _ in }
     var count: () -> Int = { 0 }
+    
+    var topOffset: CGFloat?
+    var bottomOffset: CGFloat?
     
     var context: Any?
     
@@ -155,13 +158,26 @@ public final class ComplexTableModule: NSObject, TableModule {
         self.submodules = submodules
     }
     
+    
+    
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 23
+    }
+
+    
     // These methods should not get called
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
 }
