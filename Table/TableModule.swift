@@ -58,7 +58,11 @@ class TableModuleObject: ModuleObject {
     }
     
     func willSelect(path: IndexPath) -> IndexPath? {
-        return actualDelegate.tableView?(collection!, willSelectRowAt: path)
+        if actualDelegate.responds(to: #selector(UITableViewDelegate.tableView(_:willSelectRowAt:))) {
+            return actualDelegate.tableView?(collection!, willSelectRowAt: path)
+        } else {
+            return path
+        }
     }
     
     func willDisplay(cell: UITableViewCell, at indexPath: IndexPath) {
