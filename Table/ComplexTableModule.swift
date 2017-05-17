@@ -28,6 +28,7 @@ internal final class ComplexTableModuleObject: TableModuleObject {
             submodules = complex.submodules.map { Submodule(module: $0, section: section) }
             complex.submodules.removeAll()
         }
+        module.section = section
     }
     
     override var preparations: (CollectionType) -> Void {
@@ -133,6 +134,7 @@ internal final class ComplexTableModuleObject: TableModuleObject {
 }
 
 public final class ComplexTableModule: NSObject, TableModule {
+    var section: Int = 0
 
     var reusable: TableReusable = .class(UITableViewCell.self)
     var preparations: (UITableView) -> Void = {_ in}

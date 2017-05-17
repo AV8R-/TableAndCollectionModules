@@ -33,6 +33,7 @@ class TableModuleObject: ModuleObject {
         self.section = section
         self.actualDelegate.reload = reload
         preparations = self.actualDelegate.preparations
+        module.section = section
     }
     
     func rowsCount() -> Int {
@@ -74,4 +75,5 @@ protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSour
     var reusable: TableReusable { set get }
     var preparations: (UITableView) -> Void { get }
     var reload: () -> Void { set get }
+    var section: Int { set get }
 }
