@@ -25,6 +25,7 @@ internal final class ComplexTableModuleObject: TableModuleObject {
         if let complex = module as? ComplexTableModule {
             complex.append = { [unowned self] in try self.append(submodule: $0) }
             complex.count = { [unowned self] in self.submodules.count }
+            complex.removeLast = { [unowned self] in self.submodules.removeLast() }
             submodules = complex.submodules.map { Submodule(module: $0, section: section) }
             complex.submodules.removeAll()
         }
@@ -140,6 +141,7 @@ public final class ComplexTableModule: NSObject, TableModule {
     var preparations: (UITableView) -> Void = {_ in}
     public var reload: () -> Void = {}
     var append: (TableModule) throws -> Void = { _ in }
+    var removeLast: () -> Void = {}
     var count: () -> Int = { 0 }
     
     var topOffset: CGFloat?
@@ -153,6 +155,7 @@ public final class ComplexTableModule: NSObject, TableModule {
         super.init()
         append = { [unowned self] in self.submodules.append($0) }
         count = { [unowned self] in self.submodules.count }
+        removeLast = { [unowned self] in self.submodules.removeLast() }
     }
     
     convenience init(submodules: [TableModule]) {
@@ -160,15 +163,20 @@ public final class ComplexTableModule: NSObject, TableModule {
         self.submodules = submodules
     }
     
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return bottomOffset != nil ? UIView() : nil
+    }
     
-    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return bottomOffset ?? 0
+    }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+        return topOffset != nil ? UIView() : nil
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 23
+        return topOffset ?? 0
     }
 
     
