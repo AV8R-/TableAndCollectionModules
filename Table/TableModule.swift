@@ -69,6 +69,10 @@ class TableModuleObject: ModuleObject {
     func willDisplay(cell: UITableViewCell, at indexPath: IndexPath) {
         actualDelegate.tableView?(collection!, willDisplay: cell, forRowAt: indexPath)
     }
+    
+    func didEndDisplay(cell: UITableViewCell, at indexPath: IndexPath) {
+        actualDelegate.tableView?(collection!, didEndDisplaying: cell, forRowAt: indexPath)
+    }
 }
 
 protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {

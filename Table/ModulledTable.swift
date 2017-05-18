@@ -71,6 +71,11 @@ class ModulledTable: NSObject, UITableViewDelegate, UITableViewDataSource {
         module.willDisplay(cell: cell, at: indexPath)
     }
     
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let module = modulled.module(at: indexPath.section)
+        module.didEndDisplay(cell: cell, at: indexPath)
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let module = modulled.module(at: section)
         return module.actualDelegate.tableView?(tableView, heightForHeaderInSection: section) ?? 0
