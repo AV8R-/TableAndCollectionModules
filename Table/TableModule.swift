@@ -75,7 +75,7 @@ class TableModuleObject: ModuleObject {
     }
 }
 
-protocol TableModule: NSObjectProtocol, UITableViewDelegate, UITableViewDataSource {
+protocol TableModule: UITableViewDelegate, UITableViewDataSource {
     var reusable: TableReusable { set get }
     var preparations: (UITableView) -> Void { get }
     var reload: () -> Void { set get }

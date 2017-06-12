@@ -48,7 +48,7 @@ class CollectionModuleObject: ModuleObject {
     }
 }
 
-protocol CollectionModule: NSObjectProtocol, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+protocol CollectionModule: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     var reusable: CollectionReusable { set get }
     var preparations: (UICollectionView) -> Void { get }
     var reload: () -> Void { set get }
